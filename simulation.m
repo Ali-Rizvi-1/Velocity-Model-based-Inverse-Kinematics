@@ -2,20 +2,25 @@
 % (c) 
 
 clear;clc; close all;
-T =0.01;
+
 ITER = 1000;
+T =1/ITER;
 L = 0.5; %robot width
 r = 0.25; %wheel radius
 
-t=linspace(-pi,pi,ITER); 
-xt = 8*sin(t).^3; yt = 8*sin((2*t)).^3;
+t=linspace(-pi,pi,1e3); 
+x = 8*sin(t).^3; y = 8*sin((2*t)).^3;
 %plot(x,y)
 
-N=0:ITER;
-x = 8*(sin(N*T)).^3;
-y = 8*(sin(2*N*T)).^3;
+%N=0:2*pi/T;
+N = 0:ITER;
+% x = 8*(sin(N*T )).^3;
+% y = 8*(sin(2*N*T )).^3;
 %figure;
+hold on
 plot(x,y, 'linewidth', 3)
+%plot(xt,yt, 'linewidth', 2)
+legend('discrete','continuous time')
 title('Original Discrete Trajectory')
 figure;
 
@@ -24,7 +29,7 @@ phiN = zeros(1, ITER); w = zeros(1, ITER); v = zeros(1, ITER);
 v_r = zeros(1, ITER); v_l = zeros(1, ITER); w_l = zeros(1, ITER); 
 w_r = zeros(1, ITER);
 
-for n=2:length(N)-1
+for n=2:ITER-1
     phiN(n) = atan2(y(n) - y(n-1), x(n) - x(n-1));
     
     meu = 0.5*( (sin(phiN(n))*(y(n+1)-y(n))+cos(phiN(n))*(x(n+1)-x(n))) ...
@@ -91,5 +96,8 @@ for n = 1:ITER-1
 
 end
 figure;
-plot(x_f,y_f)
+hold on 
+plot(x_f,y_f,'linewidth',1.5)
+plot(x,y,'linewidth',2)
+legend('recovered','original')
 title('Recovered trajectory')
