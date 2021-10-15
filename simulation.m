@@ -1,5 +1,5 @@
 % velocity motion model based inverse kinematics
-% (c) 
+% (c) Mohammad Ali rizvi
 
 clear;clc; close all;
 T =0.01;
