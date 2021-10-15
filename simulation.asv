@@ -1,0 +1,42 @@
+% velocity motion model based inverse kinematics
+% (c) 
+clear all;clc;
+T =0.1;
+ITER = 1e3;
+
+t=linspace(-pi,pi,ITER); 
+xt = 8*sin(t).^3; yt = 8*sin((2*t)).^3;
+%plot(x,y)
+
+N=0:1:ITER;
+x = 8*(sin(N*T)).^3;
+y = 8*(sin(2*N*T)).^3;
+%figure;plot(xn,yn)
+
+%resulting forward kinematic velocities
+phiN = zeros(1, ITER); w = zeros(1, ITER); v = zeros(1, ITER);
+
+for n=2:length(N)-1
+    phiN(n) = atan2(y(n) - y(n-1), x(n) - x(n-1));
+    
+    neu = 0.5*( (sin(phiN(n))*(y(n+1)-y(n))+cos(phiN(n))*(x(n+1)-x(n))) / (cos(phiN(n))*(y(n+1)-y(n))-sin(phiN(n))*(x(n+1)-x(n))) );
+    
+    xm = 0.5*(x(n)+x(n+1));
+    ym = 0.5*(y(n)+y(n+1));
+    
+    xs = xm + neu*(y(n)-y(n+1));
+    ys = ym + neu*(x(n+1)-x(n));
+
+    R = sqrt((x(n)-xs)^2+(y(n)-ys)^2);
+    
+    theta_1 = atan2(ys-y(n),x(n)-xs);
+    theta_2 = atan2(ys-y(n+1),x(n+1)-xs);
+
+    delta_phi_n = theta_1 - theta_2;
+    
+    w(n) = delta_phi_n / T;
+    
+    v(n) = R*w;
+    
+end 
+
