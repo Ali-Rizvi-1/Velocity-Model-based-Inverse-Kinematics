@@ -56,9 +56,9 @@ for n=2:length(N)-1
 end 
 
 subplot 211
-plot(v); title('linear velocity')
+plot(v,'linewidth',2); legend('v_n'); title('linear velocity')
 subplot 212
-plot(w); title('anguar velocity')
+plot(w,'linewidth',2); legend('\omega_n'); title('anguar velocity')
 figure;
 
 % R_t = v./w; 
@@ -69,15 +69,19 @@ figure;
 % v_l = ( (R_t - 0.5*L).*w); % left wheel linear velocity
 % w_l = v_l./r; % left wheel angular velocity
 
-subplot 221
-plot(w_r); title('w_r')
-subplot 222
-plot(w_l); title('w_l')
-subplot 223
-plot(v_r); title('v_r')
-subplot 224
-plot(v_l); title('v_l')
+subplot 121
+plot(w_r,'linewidth',2); legend('\omega_r'); title('w_r')
+subplot 122
+plot(w_l,'linewidth',2); legend('\omega_l'); title('w_l')
+% subplot 223
+% plot(v_r); title('v_r')
+% subplot 224
+% plot(v_l); title('v_l')
 
+% %plotting initializations: 
+% axis tight manual % this ensures that getframe() returns a consistent size
+% filename = 'testAnimated.gif';
+% h = figure; 
 
 x_f = zeros(1, ITER); y_f = zeros(1, ITER); phi_f = zeros(1, ITER); 
 for n = 1:ITER-1
@@ -88,8 +92,33 @@ for n = 1:ITER-1
     y_f(n+1) = y_f(n) + v(n)*T*sin(phiN(n));
     
     %phiN(n+1) = phiN(n)+T*w(n);
+    
+%     %create GIF
+%     frame = getframe(h); 
+%     im = frame2im(frame); 
+%     [imind,cm] = rgb2ind(im,256); 
+%     % Write to the GIF File 
+%     if n == 2
+%       imwrite(imind,cm,filename,'gif', 'Loopcount',inf); 
+%     else 
+%       imwrite(imind,cm,filename,'gif','WriteMode','append'); 
+%     end 
 
 end
 figure;
-plot(x_f,y_f)
+hold on
+plot(x_f,y_f,'linewidth',1.5)
+plot(x,y,'linewidth',2)
+legend('Recovered','True')
+xlabel('x'); ylabel('y');
 title('Recovered trajectory')
+
+% figure()
+% hold on 
+%  
+% plot(x_f, y_f, 'linewidth', 6); 
+% plot(x,y,'linewidth',2);
+% legend('Calculated Path', 'Original Path')
+% hold off
+% 
+% print -deps figures/OutputFig
